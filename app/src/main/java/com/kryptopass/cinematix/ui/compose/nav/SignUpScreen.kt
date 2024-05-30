@@ -19,7 +19,7 @@ import com.kryptopass.cinematix.R
 import com.kryptopass.common.nav.NavRoutes
 
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(navController: NavHostController, viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -27,6 +27,8 @@ fun SignUpScreen(navController: NavHostController) {
     var gender by remember { mutableStateOf("") }
     var zipCode by remember { mutableStateOf("") }
     var checkedState by remember { mutableStateOf(true) }
+
+    val signUpState by viewModel.signUpState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -45,6 +47,7 @@ fun SignUpScreen(navController: NavHostController) {
         if (fullName.isBlank()) {
             Text(stringResource(R.string.full_name_error), color = MaterialTheme.colorScheme.error)
         }
+
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -85,7 +88,8 @@ fun SignUpScreen(navController: NavHostController) {
                     .padding(vertical = 1.5.dp),
             )
             Text(
-                stringResource(R.string.subscribe_confirmation),            modifier = Modifier.padding(end = 16.dp),
+                stringResource(R.string.subscribe_confirmation),
+                modifier = Modifier.padding(end = 16.dp),
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -96,7 +100,9 @@ fun SignUpScreen(navController: NavHostController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedButton(
-            onClick = { navController.navigate(NavRoutes.Movies.route) },
+            onClick = {
+                viewModel.signUp(email, password)
+            },
             modifier = Modifier
                 .width(400.dp)
                 .height(48.dp)
@@ -108,6 +114,12 @@ fun SignUpScreen(navController: NavHostController) {
             )
         ) {
             Text(stringResource(R.string.continue_button))
+        }
+
+        if (signUpState) {
+            LaunchedEffect(signUpState) {
+                navController.navigate(NavRoutes.Movies.route)
+            }
         }
     }
 }

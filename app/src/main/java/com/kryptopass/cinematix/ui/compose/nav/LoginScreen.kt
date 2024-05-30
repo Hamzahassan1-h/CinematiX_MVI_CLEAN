@@ -18,6 +18,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +41,7 @@ import com.kryptopass.common.nav.NavRoutes
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+
     var showLoginDialog by remember { mutableStateOf(false) }
     val backgroundImage: Painter = painterResource(R.drawable.app_bc)
 
@@ -48,7 +51,6 @@ fun LoginScreen(navController: NavHostController) {
         contentScale = ContentScale.FillBounds,
         modifier = Modifier.fillMaxSize()
     )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -88,7 +90,7 @@ fun LoginScreen(navController: NavHostController) {
                     contentColor = Color.Black,
                     containerColor = Color.Transparent,
 
-                )
+                    )
             ) {
                 Text(
                     stringResource(R.string.login_text),
@@ -142,16 +144,18 @@ fun LoginScreen(navController: NavHostController) {
     }
 }
 
+//Updated this function to connect and make use of the viewModel
 @Composable
-fun LoginDialog(onDismiss: () -> Unit, navController: NavHostController) {
+fun LoginDialog(onDismiss: () -> Unit, navController: NavHostController, viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val loginState by viewModel.loginState.collectAsState()
 
     AlertDialog(
         modifier = Modifier
             .width(340.dp)
             .height(320.dp),
-
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.login_text)) },
         text = {
@@ -171,7 +175,9 @@ fun LoginDialog(onDismiss: () -> Unit, navController: NavHostController) {
         },
         confirmButton = {
             OutlinedButton(
-                onClick = { navController.navigate(NavRoutes.Movies.route) },
+                onClick = {
+                    viewModel.signIn(email, password)
+                },
                 modifier = Modifier
                     .width(100.dp)
                     .height(45.dp)
@@ -186,7 +192,15 @@ fun LoginDialog(onDismiss: () -> Unit, navController: NavHostController) {
             }
         }
     )
+
+    if (loginState) {
+        LaunchedEffect(loginState) {
+            navController.navigate(NavRoutes.Movies.route)
+            onDismiss()
+        }
+    }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

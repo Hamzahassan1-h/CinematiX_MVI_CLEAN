@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "532860229500",
-    "project_id": "cinematix-fa67d",
-    "storage_bucket": "cinematix-fa67d.appspot.com"
+    "project_number": "851176606366",
+    "project_id": "cinematix-fda47",
+    "storage_bucket": "cinematix-fda47.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:532860229500:android:8d55fd41a08c729bc6f6f9",
+        "mobilesdk_app_id": "1:851176606366:android:3f58c138a0726f743c498f",
         "android_client_info": {
           "package_name": "com.kryptopass.cinematix"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDqpLEakeYCe5iqwVO3fZZ6oG40Rw9zUl8"
+          "current_key": "AIzaSyAS-EbjCu7I9opf5Da_cJ93beHtrbKXw0g"
         }
       ],
       "services": {
